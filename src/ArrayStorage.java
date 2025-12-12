@@ -4,8 +4,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private int capacity = 10000;
-    private Resume[] storage = new Resume[capacity];
+    private static final int CAPACITY = 10000;
+    private Resume[] storage = new Resume[CAPACITY];
     private int size = 0;
 
     void clear() {
@@ -16,7 +16,7 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        if (size >= capacity) {
+        if (size >= CAPACITY) {
             throw new IllegalArgumentException("Массив данных переполнен");
         }
         for (int i = 0; i < size; i++) {
@@ -37,19 +37,17 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int indexDeleteResume = -1;
+        int indexForDel = -1;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                indexDeleteResume = i;
+                indexForDel = i;
                 break;
             }
         }
-        if (indexDeleteResume == -1) {
+        if (indexForDel == -1) {
             throw new IllegalArgumentException("Резюме не найдено");
         }
-        for (int i = indexDeleteResume; i < size - 1; i++) {
-            storage[i] = storage[i + 1];
-        }
+        storage[indexForDel] = storage[size - 1];
         storage[--size] = null;
     }
 
