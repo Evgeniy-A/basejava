@@ -37,18 +37,14 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int indexForDel = -1;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                indexForDel = i;
-                break;
+                storage[i] = storage[size - 1];
+                storage[--size] = null;
+                return;
             }
         }
-        if (indexForDel == -1) {
-            throw new IllegalArgumentException("Резюме не найдено");
-        }
-        storage[indexForDel] = storage[size - 1];
-        storage[--size] = null;
+        throw new IllegalArgumentException("Резюме не найдено");
     }
 
     /**
