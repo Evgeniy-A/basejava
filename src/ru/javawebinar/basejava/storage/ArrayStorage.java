@@ -17,7 +17,7 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        int targetIndex = findIndexByUuid(r.getUuid());
+        int targetIndex = findIndex(r.getUuid());
         storage[targetIndex] = r;
     }
 
@@ -35,12 +35,12 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int targetIndex = findIndexByUuid(uuid);
+        int targetIndex = findIndex(uuid);
         return storage[targetIndex];
     }
 
     public void delete(String uuid) {
-        int indexForDel = findIndexByUuid(uuid);
+        int indexForDel = findIndex(uuid);
         storage[indexForDel] = storage[size - 1];
         storage[--size] = null;
     }
@@ -56,7 +56,7 @@ public class ArrayStorage {
         return size;
     }
 
-    private int findIndexByUuid(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
