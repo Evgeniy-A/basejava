@@ -1,4 +1,6 @@
 .idea
+.lesson
 out
 *.iml
 log
+README.md
