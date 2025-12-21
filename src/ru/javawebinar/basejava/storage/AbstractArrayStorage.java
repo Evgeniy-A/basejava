@@ -11,34 +11,68 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int findIndex(String uuid);
 
-    public final void clear() {
+    public abstract void addResume(Resume r, int index);
+
+    public abstract void removeAt(int index);
+
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public final void update(Resume r) {
-        int targetIndex = findIndex(r.getUuid());
-        storage[targetIndex] = r;
+        String uuid = r.getUuid();
+        int index = findIndex(uuid);
+        checkResumeExists(uuid, index);
+        storage[index] = r;
     }
 
-    public abstract void save(Resume r);
+    public final void save(Resume r) {
+        checkCapacity();
+        String uuid = r.getUuid();
+        int index = findIndex(uuid);
+        checkResumeNotExists(uuid, index);
+        addResume(r, index);
+    }
 
     public final Resume get(String uuid) {
-        int targetIndex = findIndex(uuid);
-        return storage[targetIndex];
+        int index = findIndex(uuid);
+        checkResumeExists(uuid, index);
+        return storage[index];
     }
 
     public final void delete(String uuid) {
-        int indexForDel = findIndex(uuid);
-        storage[indexForDel] = storage[size - 1];
+        int index = findIndex(uuid);
+        checkResumeExists(uuid, index);
+        removeAt(index);
         storage[--size] = null;
     }
 
-    public final Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public final int size() {
+    public int size() {
         return size;
+    }
+
+    private void checkResumeExists(String uuid, int index) {
+        if (index < 0) {
+            throw new IllegalArgumentException(
+                    String.format("Резюме с uuid %s нет в базе", uuid));
+        }
+    }
+
+    private void checkCapacity() {
+        if (size >= CAPACITY) {
+            throw new IllegalArgumentException("Массив данных переполнен");
+        }
+    }
+
+    private void checkResumeNotExists(String uuid, int index) {
+        if (index >= 0) {
+            throw new IllegalArgumentException(
+                    String.format("Резюме с uuid %s уже есть в базе", uuid));
+        }
     }
 }
