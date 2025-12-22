@@ -13,7 +13,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public abstract void addResume(Resume r, int index);
 
-    public abstract void removeAt(int index);
+    public abstract void removeResume(int index);
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -33,6 +33,14 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = findIndex(uuid);
         checkResumeNotExists(uuid, index);
         addResume(r, index);
+        size++;
+    }
+
+    private void checkResumeNotExists(String uuid, int index) {
+        if (index >= 0) {
+            throw new IllegalArgumentException(
+                    String.format("Резюме с uuid %s уже есть в базе", uuid));
+        }
     }
 
     public final Resume get(String uuid) {
@@ -44,7 +52,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         checkResumeExists(uuid, index);
-        removeAt(index);
+        removeResume(index);
         storage[--size] = null;
     }
 
@@ -66,13 +74,6 @@ public abstract class AbstractArrayStorage implements Storage {
     private void checkCapacity() {
         if (size >= CAPACITY) {
             throw new IllegalArgumentException("Массив данных переполнен");
-        }
-    }
-
-    private void checkResumeNotExists(String uuid, int index) {
-        if (index >= 0) {
-            throw new IllegalArgumentException(
-                    String.format("Резюме с uuid %s уже есть в базе", uuid));
         }
     }
 }
