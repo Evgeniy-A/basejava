@@ -15,13 +15,11 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void addResume(Resume r, int index) {
-        index = size;
         storage[index] = r;
-        size++;
     }
 
     @Override
-    public void removeAt(int index) {
+    public void removeResume(int index) {
         storage[index] = storage[size - 1];
     }
 }
