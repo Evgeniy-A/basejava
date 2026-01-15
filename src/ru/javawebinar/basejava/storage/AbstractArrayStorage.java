@@ -39,10 +39,15 @@ public abstract class AbstractArrayStorage implements Storage {
         size++;
     }
 
+    private void checkCapacity(String uuid) {
+        if (size >= CAPACITY) {
+            throw new StorageException(uuid);
+        }
+    }
+
     private void checkResumeNotExists(String uuid, int index) {
         if (index >= 0) {
-            throw new ExistStorageException(
-                    String.format("Резюме с uuid %s уже есть в базе", uuid));
+            throw new ExistStorageException("Хранилище переполнено.");
         }
     }
 
@@ -69,14 +74,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     private void checkResumeExists(String uuid, int index) {
         if (index < 0) {
-            throw new NotExistStorageException(
-                    String.format("Резюме с uuid %s нет в базе", uuid));
-        }
-    }
-
-    private void checkCapacity(String uuid) {
-        if (size >= CAPACITY) {
-            throw new StorageException("Массив данных переполнен", uuid);
+            throw new NotExistStorageException(uuid);
         }
     }
 }
