@@ -40,13 +40,13 @@ public abstract class AbstractArrayStorage implements Storage {
 
     private void checkCapacity(String uuid) {
         if (size >= CAPACITY) {
-            throw new StorageException(uuid);
+            throw new StorageException("Хранилище переполнено.", uuid);
         }
     }
 
     private void checkResumeNotExists(String uuid, int index) {
         if (index >= 0) {
-            throw new ExistStorageException("Хранилище переполнено.");
+            throw new ExistStorageException(uuid);
         }
     }
 
