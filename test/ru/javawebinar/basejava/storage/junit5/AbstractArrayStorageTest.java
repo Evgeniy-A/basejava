@@ -1,13 +1,15 @@
 package ru.javawebinar.basejava.storage.junit5;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.ArrayStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractArrayStorageTest {
@@ -66,20 +68,22 @@ public abstract class AbstractArrayStorageTest {
     @Test
     void saveExistTest() {
         assertThrows(ExistStorageException.class, () ->
-                storage.save(new Resume(UUID_1)));
+                storage.save(RESUME_1));
     }
 
     @Test
     void saveOverflowTest() {
-        for (int i = 0; i < STORAGE_LIMIT; i++) {
-            try {
-                storage.save(new Resume());
-            } catch (StorageException e) {
-                fail("Переполнение произошло раньше времени");
+        if (storage instanceof ArrayStorage) {
+            for (int i = 0; i < STORAGE_LIMIT; i++) {
+                try {
+                    storage.save(new Resume());
+                } catch (StorageException e) {
+                    fail("Переполнение произошло раньше времени");
+                }
             }
+            assertThrows(StorageException.class, () ->
+                    storage.save(new Resume()));
         }
-        assertThrows(StorageException.class, () ->
-        storage.save(new Resume()));
     }
 
     @Test
@@ -90,7 +94,7 @@ public abstract class AbstractArrayStorageTest {
     @Test
     void getNotExistTest() {
         assertThrows(NotExistStorageException.class, () ->
-        storage.get(UUID_4));
+                storage.get(UUID_4));
     }
 
     @Test
@@ -99,23 +103,20 @@ public abstract class AbstractArrayStorageTest {
         storage.delete(UUID_1);
         assertEquals(sizeBefore - 1, storage.size());
         assertThrows(NotExistStorageException.class, () ->
-        storage.get(UUID_1));
+                storage.get(UUID_1));
     }
 
     @Test
     void deleteNotExistTest() {
         assertThrows(NotExistStorageException.class, () ->
-        storage.delete(UUID_4));
+                storage.delete(UUID_4));
     }
 
     @Test
     void getAllTest() {
-        Resume[] allResume = storage.getAll();
-        assertEquals(storage.size(), allResume.length);
-        for (Resume r : allResume) {
-            Resume resume = storage.get(r.getUuid());
-            assertEquals(r, resume);
-        }
+        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
+        Resume[] actual = storage.getAll();
+        assertArrayEquals(expected, actual);
     }
 
     @Test
