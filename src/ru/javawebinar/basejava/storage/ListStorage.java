@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
@@ -9,6 +7,11 @@ import java.util.List;
 
 public class ListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
+
+    @Override
+    public void clear() {
+        storage.clear();
+    }
 
     @Override
     protected Integer findSearchKey(String uuid) {
@@ -21,23 +24,14 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void checkResumeExists(Object searchKey, String uuid) {
-        if (searchKey == null) {
-            throw new NotExistStorageException(uuid);
-        }
+    protected boolean hasKey(Object index) {
+        return index != null;
     }
 
     @Override
     protected void replaceResume(Resume r, Object searchKey) {
         int index = (int) searchKey;
         storage.set(index, r);
-    }
-
-    @Override
-    protected void checkResumeNotExists(Object searchKey, String uuid) {
-        if (searchKey != null) {
-            throw new ExistStorageException(uuid);
-        }
     }
 
     @Override
@@ -55,11 +49,6 @@ public class ListStorage extends AbstractStorage {
     protected Resume doGet(Object searchKey) {
         int index = (int) searchKey;
         return storage.get(index);
-    }
-
-    @Override
-    public void clear() {
-        storage.clear();
     }
 
     @Override
