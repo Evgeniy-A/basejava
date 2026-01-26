@@ -4,7 +4,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
-    protected Integer findSearchKey(String uuid) {
+    protected Integer doFindSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -19,9 +19,8 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public void removeResume(Object searchKey) {
-        int index = (int) searchKey;
-        storage[index] = storage[size - 1];
+    public void doRemove(Object index) {
+        storage[(int) index] = storage[size - 1];
         deleteLast();
     }
 }
