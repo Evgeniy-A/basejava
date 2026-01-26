@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
@@ -12,11 +10,53 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[CAPACITY];
     protected int size = 0;
 
+    protected abstract Integer doFindSearchKey(String uuid);
+
     protected abstract void insertResume(Resume r, int index);
+
+    protected abstract void doRemove(Object index);
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
+    }
+
+    @Override
+    protected final Integer findSearchKey(String uuid) {
+        return doFindSearchKey(uuid);
+    }
+
+    @Override
+    protected boolean hasKey(Object index) {
+        return (int) index >= 0;
+    }
+
+    @Override
+    protected void replaceResume(Resume r, Object index) {
+        storage[(int) index] = r;
+    }
+
+    @Override
+    protected final void addResume(Resume r, Object index) {
+        checkCapacity(r.getUuid());
+        insertResume(r, (int) index);
+        size++;
+    }
+
+    private void checkCapacity(String uuid) {
+        if (size >= CAPACITY) {
+            throw new StorageException("Хранилище переполнено.", uuid);
+        }
+    }
+
+    @Override
+    protected final void removeResume(Object index) {
+        doRemove(index);
+    }
+
+    @Override
+    protected Resume doGet(Object index) {
+        return storage[(int) index];
     }
 
     public Resume[] getAll() {
@@ -29,47 +69,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected void deleteLast() {
         storage[--size] = null;
-    }
-
-    @Override
-    protected void replaceResume(Resume r, Object searchKey) {
-        int index = (int) searchKey;
-        storage[index] = r;
-    }
-
-    @Override
-    protected void checkResumeExists(Object searchKey, String uuid) {
-        int index = (int) searchKey;
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    protected void checkResumeNotExists(Object searchKey, String uuid) {
-        int index = (int) searchKey;
-        if (index >= 0) {
-            throw new ExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    protected final void addResume(Resume r, Object searchKey) {
-        checkCapacity(r.getUuid());
-        int index = (int) searchKey;
-        insertResume(r, index);
-        size++;
-    }
-
-    private void checkCapacity(String uuid) {
-        if (size >= CAPACITY) {
-            throw new StorageException("Хранилище переполнено.", uuid);
-        }
-    }
-
-    @Override
-    protected Resume doGet(Object searchKey) {
-        int index = (int) searchKey;
-        return storage[index];
     }
 }
