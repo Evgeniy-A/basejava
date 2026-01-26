@@ -3,7 +3,6 @@ package ru.javawebinar.basejava.storage.junit5;
 import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.storage.AbstractStorageTest;
 import ru.javawebinar.basejava.storage.Storage;
 
 import static org.junit.jupiter.api.Assertions.*;
