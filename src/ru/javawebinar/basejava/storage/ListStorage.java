@@ -24,31 +24,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean hasKey(Object index) {
+    protected boolean isExist(Object index) {
         return index != null;
     }
 
     @Override
-    protected void replaceResume(Resume r, Object searchKey) {
-        int index = (int) searchKey;
-        storage.set(index, r);
+    protected void replaceResume(Resume r, Object index) {
+        storage.set((int) index, r);
     }
 
     @Override
-    protected void addResume(Resume r, Object searchKey) {
+    protected void addResume(Resume r, Object index) {
         storage.add(r);
     }
 
     @Override
-    protected void removeResume(Object searchKey) {
-        int index = (int) searchKey;
-        storage.remove(index);
+    protected void removeResume(Object index) {
+        storage.remove((int) index);
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        int index = (int) searchKey;
-        return storage.get(index);
+    protected Resume doGet(Object index) {
+        return storage.get((int) index);
     }
 
     @Override
