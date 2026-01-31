@@ -25,7 +25,7 @@ public abstract class AbstractStorageTest {
     }
 
     @BeforeEach
-    void setUpTest() {
+    void setUp() {
         storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);
@@ -95,7 +95,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllTest() {
-        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
+        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
         Resume[] actual = storage.getAll();
         assertArrayEquals(expected, actual);
     }
