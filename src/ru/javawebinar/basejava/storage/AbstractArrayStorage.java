@@ -10,11 +10,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[CAPACITY];
     protected int size = 0;
 
-    protected abstract Integer doFindSearchKey(String uuid);
+    protected abstract Integer findSearchKey(String uuid);
 
     protected abstract void insertResume(Resume r, int index);
 
-    protected abstract void doRemove(Object index);
+    protected abstract void deleteResume(int index);
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -22,12 +22,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final Integer findSearchKey(String uuid) {
-        return doFindSearchKey(uuid);
-    }
-
-    @Override
-    protected boolean hasKey(Object index) {
+    protected boolean isExist(Object index) {
         return (int) index >= 0;
     }
 
@@ -51,7 +46,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected final void removeResume(Object index) {
-        doRemove(index);
+        deleteResume((int) index);
+        storage[--size] = null;
     }
 
     @Override
@@ -65,9 +61,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     public int size() {
         return size;
-    }
-
-    protected void deleteLast() {
-        storage[--size] = null;
     }
 }
