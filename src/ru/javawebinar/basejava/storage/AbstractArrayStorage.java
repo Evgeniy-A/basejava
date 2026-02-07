@@ -16,6 +16,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void deleteResume(int index);
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -51,14 +52,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(Object index) {
+    protected Resume getResume(Object index) {
         return storage[(int) index];
     }
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
+    @Override
     public int size() {
         return size;
     }
