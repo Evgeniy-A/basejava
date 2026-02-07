@@ -15,7 +15,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void removeResume(Object searchKey);
 
-    protected abstract Resume doGet(Object searchKey);
+    protected abstract Resume getResume(Object searchKey);
 
     @Override
     public final void update(Resume r) {
@@ -38,7 +38,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public final Resume get(String uuid) {
         Object searchKey = getExistingSearchKey(uuid);
-        return doGet(searchKey);
+        return getResume(searchKey);
     }
 
     private Object getExistingSearchKey(String uuid) {
