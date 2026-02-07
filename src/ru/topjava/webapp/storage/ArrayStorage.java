@@ -16,11 +16,6 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        int targetIndex = findIndexByUuid(r.getUuid());
-        storage[targetIndex] = r;
-    }
-
     public void save(Resume r) {
         if (size >= CAPACITY) {
             throw new IllegalArgumentException("Массив данных переполнен");
