@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -28,8 +31,8 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public final void save(Resume r) {
-        checkCapacity();
         String uuid = r.getUuid();
+        checkCapacity(uuid);
         int index = findIndex(uuid);
         checkResumeNotExists(uuid, index);
         addResume(r, index);
@@ -38,7 +41,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     private void checkResumeNotExists(String uuid, int index) {
         if (index >= 0) {
-            throw new IllegalArgumentException(
+            throw new ExistStorageException(
                     String.format("Резюме с uuid %s уже есть в базе", uuid));
         }
     }
@@ -66,14 +69,14 @@ public abstract class AbstractArrayStorage implements Storage {
 
     private void checkResumeExists(String uuid, int index) {
         if (index < 0) {
-            throw new IllegalArgumentException(
+            throw new NotExistStorageException(
                     String.format("Резюме с uuid %s нет в базе", uuid));
         }
     }
 
-    private void checkCapacity() {
+    private void checkCapacity(String uuid) {
         if (size >= CAPACITY) {
-            throw new IllegalArgumentException("Массив данных переполнен");
+            throw new StorageException("Массив данных переполнен", uuid);
         }
     }
 }
