@@ -1,7 +1,6 @@
 package ru.topjava.webapp.storage;
 
 import ru.topjava.webapp.model.Resume;
-
 import java.util.Arrays;
 
 /**
@@ -15,6 +14,11 @@ public class ArrayStorage {
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
+    }
+
+    public void update(Resume r) {
+        int targetIndex = findIndexByUuid(r.getUuid());
+        storage[targetIndex] = r;
     }
 
     public void save(Resume r) {
@@ -31,22 +35,14 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                return storage[i];
-            }
-        }
-        return null;
+        int targetIndex = findIndexByUuid(uuid);
+        return storage[targetIndex];
     }
 
     public void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                size--;
-            }
-        }
+        int indexForDel = findIndexByUuid(uuid);
+        storage[indexForDel] = storage[size - 1];
+        storage[--size] = null;
     }
 
     /**
@@ -58,5 +54,15 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    private int findIndexByUuid(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException(
+                String.format("Резюме с uuid %s не найдено", uuid));
     }
 }
