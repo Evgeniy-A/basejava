@@ -1,3 +1,7 @@
+package ru.topjava.webapp.storage;
+
+import ru.topjava.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -8,53 +12,51 @@ public class ArrayStorage {
     private Resume[] storage = new Resume[CAPACITY];
     private int size = 0;
 
-    void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
         if (size >= CAPACITY) {
             throw new IllegalArgumentException("Массив данных переполнен");
         }
         for (int i = 0; i < size; i++) {
             if (storage[i].equals(r)) {
-                throw new IllegalArgumentException("Такое резюме уже есть в базе");
+                throw new IllegalArgumentException(
+                        String.format("Резюме с uuid %s уже есть в базе", r.getUuid()));
             }
         }
         storage[size++] = r;
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
+            if (uuid.equals(storage[i].getUuid())) {
                 return storage[i];
             }
         }
-        throw new IllegalArgumentException("Резюме не найдено");
+        return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
+            if (uuid.equals(storage[i].getUuid())) {
                 storage[i] = storage[size - 1];
-                storage[--size] = null;
-                return;
+                storage[size - 1] = null;
+                size--;
             }
         }
-        throw new IllegalArgumentException("Резюме не найдено");
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 }
