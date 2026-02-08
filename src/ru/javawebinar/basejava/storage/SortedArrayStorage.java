@@ -1,28 +1,26 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
+
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
-    public void clear() {
-    }
-
-    @Override
-    public void update(Resume r) {
-    }
-
-    @Override
     public void save(Resume r) {
-    }
-
-    @Override
-    public void delete(String uuid) {
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+        if (size >= CAPACITY) {
+            throw new IllegalArgumentException("Массив данных переполнен");
+        }
+        String savedUuid = r.getUuid();
+        int saveIndex = binarySearchByUuid(savedUuid);
+        if (saveIndex >= 0) {
+            throw new IllegalArgumentException(
+                    String.format("Резюме с uuid %s уже есть в базе", r.getUuid()));
+        }
+        saveIndex = -saveIndex - 1;
+        System.arraycopy(storage, saveIndex, storage,
+                saveIndex + 1, size - saveIndex);
+        storage[saveIndex] = r;
+        size++;
     }
 
     @Override
