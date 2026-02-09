@@ -7,6 +7,9 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.Storage;
 
+import java.util.Comparator;
+
+import static java.util.Arrays.sort;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
@@ -97,6 +100,7 @@ public abstract class AbstractStorageTest {
     void getAllTest() {
         Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
         Resume[] actual = storage.getAll();
+        sort(actual, Comparator.comparing(Resume::getUuid));
         assertArrayEquals(expected, actual);
     }
 
