@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
  * (just run, no need to understand)
  */
 public class MainArray {
-    private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    private static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -37,7 +37,7 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume(uuid);
+                    r = Resume.ofUuid(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
@@ -62,7 +62,7 @@ public class MainArray {
     }
 
     public static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
+        Resume[] all = ARRAY_STORAGE.getAllSorted().toArray(new Resume[0]);
         System.out.println("----------------------------");
         if (all.length == 0) {
             System.out.println("Empty");
