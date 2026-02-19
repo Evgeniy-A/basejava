@@ -4,8 +4,8 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
-    Map<String, Resume> storage = new HashMap<>();
+public class MapUuidStorage extends AbstractStorage {
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected Object findSearchKey(String uuid) {
