@@ -14,16 +14,18 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
 
     public Resume() {
-        this.uuid = UUID.randomUUID().toString();
+        this(UUID.randomUUID().toString(), "dummy");
     }
 
     private Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
 
     public static Resume ofUuid(String uuid) {
-        return new Resume(uuid, null);
+        return new Resume(uuid, "dummy");
     }
 
     public static Resume ofFullName(String fullName) {
@@ -51,12 +53,12 @@ public class Resume implements Comparable<Resume> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid);
+        return Objects.equals(fullName, resume.fullName) && Objects.equals(uuid, resume.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(uuid);
+        return Objects.hash(fullName, uuid);
     }
 
     @Override

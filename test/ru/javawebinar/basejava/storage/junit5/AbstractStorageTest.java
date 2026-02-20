@@ -7,8 +7,6 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.Storage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,8 +37,7 @@ public abstract class AbstractStorageTest {
     @Test
     void clearTest() {
         storage.clear();
-        assertEquals(0, storage.getAllSorted().size());
-        assertEquals(0, storage.size());
+        assertStorageSizeAndContents(0, List.of());
     }
 
     @Test
@@ -59,10 +56,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     void saveTest() {
-        int sizeBefore = storage.size();
+        int expectedSize = storage.size() + 1;
         storage.save(RESUME_4);
-        assertEquals(RESUME_4, storage.get(UUID_4));
-        assertEquals(sizeBefore + 1, storage.size());
+        assertStorageSizeAndContents(expectedSize, List.of(RESUME_1, RESUME_2, RESUME_3, RESUME_4));
     }
 
     @Test
@@ -84,11 +80,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     void deleteTest() {
-        int sizeBefore = storage.size();
+        int expectedSize = storage.size() - 1;
         storage.delete(UUID_1);
-        assertEquals(sizeBefore - 1, storage.size());
-        assertThrows(NotExistStorageException.class, () ->
-                storage.get(UUID_1));
+        assertStorageSizeAndContents(expectedSize, List.of(RESUME_2, RESUME_3));
     }
 
     @Test
@@ -99,13 +93,16 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllSortedTest() {
-        List<Resume> expected = new ArrayList<>(Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
-        List<Resume> actual = storage.getAllSorted();
-        assertEquals(expected, actual);
+        assertStorageSizeAndContents(storage.size(), List.of(RESUME_1, RESUME_2, RESUME_3));
     }
 
     @Test
     void sizeTest() {
         assertEquals(3, storage.size());
+    }
+
+    private void assertStorageSizeAndContents(int expectedSize, List<Resume> expected) {
+        assertEquals(expected, storage.getAllSorted());
+        assertEquals(expectedSize, storage.size());
     }
 }
