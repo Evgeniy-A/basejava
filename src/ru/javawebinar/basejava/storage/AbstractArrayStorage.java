@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int CAPACITY = 10000;
     protected Resume[] storage = new Resume[CAPACITY];
     protected int size = 0;
@@ -25,19 +25,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object index) {
-        return (int) index >= 0;
+    protected boolean isExist(Integer index) {
+        return index >= 0;
     }
 
     @Override
-    protected void replaceResume(Resume r, Object index) {
-        storage[(int) index] = r;
+    protected void replaceResume(Resume r, Integer index) {
+        storage[index] = r;
     }
 
     @Override
-    protected final void addResume(Resume r, Object index) {
+    protected final void addResume(Resume r, Integer index) {
         checkCapacity(r.getUuid());
-        insertResume(r, (int) index);
+        insertResume(r, index);
         size++;
     }
 
@@ -48,14 +48,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void removeResume(Object index) {
-        deleteResume((int) index);
+    protected final void removeResume(Integer index) {
+        deleteResume(index);
         storage[--size] = null;
     }
 
     @Override
-    protected Resume getResume(Object index) {
-        return storage[(int) index];
+    protected Resume getResume(Integer index) {
+        return storage[index];
     }
 
     @Override
