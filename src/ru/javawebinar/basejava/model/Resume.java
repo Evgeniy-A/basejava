@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,6 +14,8 @@ import static java.util.Comparator.nullsFirst;
 public class Resume implements Comparable<Resume> {
     private String fullName;
     private final String uuid;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume() {
         this(UUID.randomUUID().toString(), "dummy");
@@ -44,6 +48,30 @@ public class Resume implements Comparable<Resume> {
         return uuid;
     }
 
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public void setSections(SectionType type, AbstractSection value) {
+        sections.put(type, value);
+    }
+
     @Override
     public String toString() {
         return uuid;
@@ -53,12 +81,15 @@ public class Resume implements Comparable<Resume> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(fullName, resume.fullName) && Objects.equals(uuid, resume.uuid);
+        return Objects.equals(fullName, resume.fullName) &&
+               Objects.equals(uuid, resume.uuid) &&
+               Objects.equals(contacts, resume.contacts) &&
+               Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullName, uuid);
+        return Objects.hash(fullName, uuid, contacts, sections);
     }
 
     @Override
