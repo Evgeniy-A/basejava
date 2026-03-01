@@ -28,12 +28,16 @@ public class Resume implements Comparable<Resume> {
         this.fullName = fullName;
     }
 
+    public static Resume of(String uuid, String fullName) {
+        return new Resume(uuid, fullName);
+    }
+
     public static Resume ofUuid(String uuid) {
-        return new Resume(uuid, "dummy");
+        return of(uuid, "dummy");
     }
 
     public static Resume ofFullName(String fullName) {
-        return new Resume(UUID.randomUUID().toString(), fullName);
+        return of(UUID.randomUUID().toString(), fullName);
     }
 
     public String getFullName() {

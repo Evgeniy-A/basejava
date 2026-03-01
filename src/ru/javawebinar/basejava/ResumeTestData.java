@@ -11,7 +11,7 @@ import static ru.javawebinar.basejava.model.SectionType.*;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume testResume = creatResume();
+        Resume testResume = creatResume("12345", "Григорий Кислин");
         printResume(testResume);
     }
 
@@ -31,8 +31,8 @@ public class ResumeTestData {
         }
     }
 
-    private static Resume creatResume() {
-        Resume testResume = Resume.ofFullName("Григорий Кислин");
+    public static Resume creatResume(String uuid, String fullName) {
+        Resume testResume = Resume.of(uuid, fullName);
         creatContactsResume(testResume);
         creatSectionsResume(testResume);
         return testResume;
