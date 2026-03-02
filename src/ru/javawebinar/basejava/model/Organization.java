@@ -48,6 +48,14 @@ public class Organization {
 
     @Override
     public String toString() {
-        return url + "," + name + "," + positions;
+        StringBuilder sb = new StringBuilder();
+        sb.append(url).append(" ").append(name).append(System.lineSeparator());
+        for (int i = 0; i < positions.size(); i++) {
+            sb.append(positions.get(i));
+            if (i < positions.size() - 1) {
+                sb.append(System.lineSeparator());
+            }
+        }
+        return sb.toString();
     }
 }

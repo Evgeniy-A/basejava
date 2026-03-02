@@ -33,12 +33,12 @@ public class ResumeTestData {
 
     public static Resume creatResume(String uuid, String fullName) {
         Resume testResume = Resume.of(uuid, fullName);
-        creatContactsResume(testResume);
-        creatSectionsResume(testResume);
+        creatResumeContacts(testResume);
+        creatResumeSections(testResume);
         return testResume;
     }
 
-    private static void creatContactsResume(Resume testResume) {
+    private static void creatResumeContacts(Resume testResume) {
         testResume.setContacts(PHONE, "+7(921) 855-0482");
         testResume.setContacts(SKYPE, "skype:grigory.kislin");
         testResume.setContacts(MAIL, "gkislin@yandex.ru");
@@ -48,7 +48,7 @@ public class ResumeTestData {
         testResume.setContacts(HOME_PAGE, "http://gkislin.ru/");
     }
 
-    private static void creatSectionsResume(Resume testResume) {
+    private static void creatResumeSections(Resume testResume) {
         testResume.setSections(OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного " +
                 "обучения по Java Web и Enterprise технологиям"));
@@ -74,7 +74,7 @@ public class ResumeTestData {
         contentSecondList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
         testResume.setSections(QUALIFICATIONS, new ListSection(contentSecondList));
         testResume.setSections(EXPERIENCE, new OrganizationSection(
-                new Organization("Java Online Projects", "http://javaops.ru/",
+                new Organization("http://javaops.ru/", "Java Online Projects",
                         new Position(
                                 YearMonth.of(2013, 10),
                                 null,
@@ -82,7 +82,7 @@ public class ResumeTestData {
                                 "Создание, организация и проведение Java онлайн проектов."
                         )
                 ),
-                new Organization("Wrike", "https://www.wrike.com/",
+                new Organization("https://www.wrike.com/", "Wrike",
                         new Position(
                                 YearMonth.of(2014, 10),
                                 YearMonth.of(2016, 1),
@@ -93,7 +93,7 @@ public class ResumeTestData {
         ));
         testResume.setSections(SectionType.EDUCATION,
                 new OrganizationSection(
-                        new Organization("Coursera", "https://www.coursera.org/",
+                        new Organization("https://www.coursera.org/", "Coursera",
                                 new Position(
                                         YearMonth.of(2013, 3),
                                         YearMonth.of(2013, 5),
@@ -101,8 +101,8 @@ public class ResumeTestData {
                                         null
                                 )
                         ),
-                        new Organization("Luxoft", "https://www.luxoft-training.ru" +
-                                                   "/training/catalog/course.html?ID=22366",
+                        new Organization("https://www.luxoft-training.ru" +
+                                         "/training/catalog/course.html?ID=22366", "Luxoft",
                                 new Position(
                                         YearMonth.of(2011, 3),
                                         YearMonth.of(2011, 4),
@@ -111,7 +111,20 @@ public class ResumeTestData {
                                         "Концептуальное моделирование на UML.'",
                                         null
                                 )
+                        ),
+                        new Organization("https://itmo.ru/",
+                                "Санкт-Петербургский национальный исследовательский " +
+                                "университет информационных технологий, механики и оптики",
+                                new Position(
+                                        YearMonth.of(1993, 9),
+                                        YearMonth.of(1996, 7), "\n" +
+                                                               "Аспирантура (программист С, С++)", null),
+                                new Position(
+                                        YearMonth.of(1987, 9),
+                                        YearMonth.of(1993, 7), "\n" +
+                                                               "Инженер (программист Fortran, C)", null)
                         )
+
                 )
         );
     }
