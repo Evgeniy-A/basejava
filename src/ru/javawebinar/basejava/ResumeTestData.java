@@ -75,7 +75,7 @@ public class ResumeTestData {
         testResume.setSections(QUALIFICATIONS, new ListSection(contentSecondList));
         testResume.setSections(EXPERIENCE, new OrganizationSection(
                 new Organization("http://javaops.ru/", "Java Online Projects",
-                        new Position(
+                        new Organization.Position(
                                 YearMonth.of(2013, 10),
                                 null,
                                 "Автор проекта",
@@ -83,7 +83,7 @@ public class ResumeTestData {
                         )
                 ),
                 new Organization("https://www.wrike.com/", "Wrike",
-                        new Position(
+                        new Organization.Position(
                                 YearMonth.of(2014, 10),
                                 YearMonth.of(2016, 1),
                                 "Старший разработчик",
@@ -94,7 +94,7 @@ public class ResumeTestData {
         testResume.setSections(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("https://www.coursera.org/", "Coursera",
-                                new Position(
+                                new Organization.Position(
                                         YearMonth.of(2013, 3),
                                         YearMonth.of(2013, 5),
                                         "Functional Programming in Scala",
@@ -103,7 +103,7 @@ public class ResumeTestData {
                         ),
                         new Organization("https://www.luxoft-training.ru" +
                                          "/training/catalog/course.html?ID=22366", "Luxoft",
-                                new Position(
+                                new Organization.Position(
                                         YearMonth.of(2011, 3),
                                         YearMonth.of(2011, 4),
                                         "\n" +
@@ -115,11 +115,11 @@ public class ResumeTestData {
                         new Organization("https://itmo.ru/",
                                 "Санкт-Петербургский национальный исследовательский " +
                                 "университет информационных технологий, механики и оптики",
-                                new Position(
+                                new Organization.Position(
                                         YearMonth.of(1993, 9),
                                         YearMonth.of(1996, 7), "\n" +
                                                                "Аспирантура (программист С, С++)", null),
-                                new Position(
+                                new Organization.Position(
                                         YearMonth.of(1987, 9),
                                         YearMonth.of(1993, 7), "\n" +
                                                                "Инженер (программист Fortran, C)", null)
