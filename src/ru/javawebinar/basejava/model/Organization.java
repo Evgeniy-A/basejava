@@ -1,11 +1,13 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Organization {
+public class Organization implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final Link link;
     private final List<Position> positions;
 
@@ -17,6 +19,18 @@ public class Organization {
         Objects.requireNonNull(positions, "positions must not be null");
         this.link = new Link(url, name);
         this.positions = positions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return Objects.equals(link, that.link) && Objects.equals(positions, that.positions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(link, positions);
     }
 
     public List<Position> getPositions() {
@@ -36,7 +50,8 @@ public class Organization {
         return sb.toString();
     }
 
-    public static class Link {
+    public static class Link implements Serializable {
+        private static final long serialVersionUID = 1L;
         private final String url;
         private final String name;
 
@@ -72,7 +87,8 @@ public class Organization {
         }
     }
 
-    public static class Position {
+    public static class Position implements Serializable {
+        private static final long serialVersionUID = 1L;
         private final YearMonth startDate;
         private final YearMonth endDate;
         private final String title;
