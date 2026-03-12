@@ -8,23 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final File directory;
 
-    protected AbstractFileStorage(File directory) {
-        Objects.requireNonNull(directory, "directory must not be null");
+    public FileStorage(String dir) {
+        Objects.requireNonNull(dir, "directory must not be null");
+        directory = new File(dir);
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + "is not directory");
         }
         if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + "is not readable/writable");
         }
-        this.directory = directory;
     }
 
-    protected abstract void writeResume(Resume r, OutputStream os) throws IOException;
+    private Resume readResume(InputStream is) throws IOException {
+        try (ObjectInputStream iis = new ObjectInputStream(is)) {
+            return (Resume) iis.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new StorageException(null, "Error read resume", e);
+        }
+    }
 
-    protected abstract Resume readResume(InputStream is) throws IOException;
+    private void writeResume(Resume r, OutputStream os) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
+            oos.writeObject(r);
+        }
+    }
 
     @Override
     protected File findSearchKey(String uuid) {

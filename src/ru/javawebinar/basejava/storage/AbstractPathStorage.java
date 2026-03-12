@@ -21,9 +21,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         }
     }
 
-    protected abstract void writeResume(Resume r, OutputStream os) throws IOException;
+    protected abstract void writeResume(Resume r, Path directory) throws IOException;
 
-    protected abstract Resume readResume(InputStream is) throws IOException;
+    protected abstract Resume readResume(Path path) throws IOException;
 
     @Override
     protected Path findSearchKey(String uuid) {
@@ -38,7 +38,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void replaceResume(Resume r, Path path) {
         try {
-            writeResume(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            writeResume(r, path);
         } catch (IOException e) {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
@@ -47,7 +47,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void addResume(Resume r, Path path) {
         try {
-            writeResume(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            writeResume(r, path);
         } catch (IOException e) {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
@@ -65,7 +65,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getResume(Path path) {
         try {
-            return readResume(new BufferedInputStream(Files.newInputStream(path)));
+            return readResume(path);
         } catch (IOException e) {
             throw new StorageException("Path read error", directory.toAbsolutePath().toString(), e);
         }
