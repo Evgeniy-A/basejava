@@ -9,21 +9,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
+    private final Serializer serializer;
 
-    protected AbstractPathStorage(String dir) {
+    public PathStorage(String dir, Serializer serializer) {
         directory = Paths.get(dir);
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory");
         }
+        Objects.requireNonNull(serializer, "serializer must not be null");
+        this.serializer = serializer;
     }
-
-    protected abstract void writeResume(Resume r, Path directory) throws IOException;
-
-    protected abstract Resume readResume(Path path) throws IOException;
 
     @Override
     protected Path findSearchKey(String uuid) {
@@ -38,7 +38,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void replaceResume(Resume r, Path path) {
         try {
-            writeResume(r, path);
+            serializer.writeResume(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
@@ -47,7 +47,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void addResume(Resume r, Path path) {
         try {
-            writeResume(r, path);
+            serializer.writeResume(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
@@ -65,7 +65,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getResume(Path path) {
         try {
-            return readResume(path);
+            return serializer.readResume(new BufferedInputStream(Files.newInputStream(path)) {
+            });
         } catch (IOException e) {
             throw new StorageException("Path read error", directory.toAbsolutePath().toString(), e);
         }
