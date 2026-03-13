@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.serializer.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -65,8 +66,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getResume(Path path) {
         try {
-            return serializer.readResume(new BufferedInputStream(Files.newInputStream(path)) {
-            });
+            return serializer.readResume(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path read error", directory.toAbsolutePath().toString(), e);
         }

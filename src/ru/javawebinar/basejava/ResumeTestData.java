@@ -89,6 +89,25 @@ public class ResumeTestData {
                                 "Старший разработчик",
                                 "Проектирование и разработка онлайн платформы."
                         )
+                ),
+                new Organization(null, "RIT Center",
+                        new Organization.Position(
+                                YearMonth.of(2012, 4),
+                                YearMonth.of(2014, 10),
+                                "Java архитектор",
+                                "Организация процесса разработки системы ERP " +
+                                "для разных окружений: релизная политика, версионирование," +
+                                " ведение CI (Jenkins), миграция базы (кастомизация Flyway), " +
+                                "конфигурирование системы (pgBoucer, Nginx), AAA via SSO." +
+                                " Архитектура БД и серверной части системы. Разработка " +
+                                "интергационных сервисов: CMIS, BPMN2, 1C (WebServices)," +
+                                " сервисов общего назначения (почта, экспорт в pdf, doc, html)." +
+                                " Интеграция Alfresco JLAN для online редактирование из браузера" +
+                                " документов MS Office. Maven + plugin development, Ant, Apache " +
+                                "Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, " +
+                                "OpenCmis, Bonita, Python scripting, Unix shell remote " +
+                                "scripting via ssh tunnels, PL/Python"
+                        )
                 )
         ));
         testResume.setSections(SectionType.EDUCATION,

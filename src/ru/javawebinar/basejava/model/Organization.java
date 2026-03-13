@@ -11,7 +11,7 @@ public class Organization implements Serializable {
     private final Link link;
     private final List<Position> positions;
 
-    public Organization(String name, String url, Position... positions) {
+    public Organization(String url, String name, Position... positions) {
         this(name, url, Arrays.asList(positions));
     }
 
@@ -55,7 +55,7 @@ public class Organization implements Serializable {
         private final String url;
         private final String name;
 
-        public Link(String url, String name) {
+        public Link(String name, String url) {
             Objects.requireNonNull(name, "name must not be null");
             this.url = url;
             this.name = name;
@@ -83,7 +83,7 @@ public class Organization implements Serializable {
 
         @Override
         public String toString() {
-            return url + " " + name;
+            return (url == null ? "" : url + " ") + name;
         }
     }
 
@@ -137,7 +137,7 @@ public class Organization implements Serializable {
         @Override
         public String toString() {
             String endDate = (this.endDate == null) ? "Сейчас" : this.endDate.toString();
-            return startDate + " - " + endDate + " " + title;
+            return startDate + " - " + endDate + " " + title + description;
         }
     }
 }

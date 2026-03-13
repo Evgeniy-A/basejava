@@ -16,7 +16,7 @@ public class OrganizationSection extends AbstractSection {
         this.organizations = organizations;
     }
 
-    public List<Organization> getOrganizations() {
+    private List<Organization> getOrganizations() {
         return organizations;
     }
 
