@@ -95,7 +95,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try (Stream<Path> stream = Files.list(directory)) {
             return stream.toList();
         } catch (IOException e) {
-            throw new StorageException("Path error", directory.toAbsolutePath().toString());
+            throw new StorageException("Path error", e);
         }
     }
 }
