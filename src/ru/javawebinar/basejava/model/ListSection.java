@@ -1,11 +1,18 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
-    private final List<String> contentList;
+    private List<String> contentList;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> contentList) {
         Objects.requireNonNull(contentList, "contentList must not be null");

@@ -1,5 +1,9 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
@@ -12,16 +16,16 @@ import static java.util.Comparator.nullsFirst;
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 1L;
     private String fullName;
-    private final String uuid;
+    private String uuid;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
-    public Resume() {
-        this(UUID.randomUUID().toString(), "dummy");
-    }
+    public Resume() {}
 
     private Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid must not be null");

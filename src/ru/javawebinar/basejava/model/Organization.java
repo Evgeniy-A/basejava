@@ -1,15 +1,24 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import ru.javawebinar.basejava.util.YearMonthAdapter;
+
 import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final Link link;
-    private final List<Position> positions;
+    private Link link;
+    private List<Position> positions;
+
+    public Organization() {
+    }
 
     public Organization(String url, String name, Position... positions) {
         this(name, url, Arrays.asList(positions));
@@ -50,10 +59,14 @@ public class Organization implements Serializable {
         return sb.toString();
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Link implements Serializable {
         private static final long serialVersionUID = 1L;
-        private final String url;
-        private final String name;
+        private String url;
+        private String name;
+
+        public Link() {
+        }
 
         public Link(String name, String url) {
             Objects.requireNonNull(name, "name must not be null");
@@ -87,12 +100,18 @@ public class Organization implements Serializable {
         }
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;
-        private final YearMonth startDate;
-        private final YearMonth endDate;
-        private final String title;
-        private final String description;
+        @XmlJavaTypeAdapter(YearMonthAdapter.class)
+        private YearMonth startDate;
+        @XmlJavaTypeAdapter(YearMonthAdapter.class)
+        private YearMonth endDate;
+        private String title;
+        private String description;
+
+        public Position() {
+        }
 
         public Position(YearMonth startDate, YearMonth endDate, String title, String description) {
             Objects.requireNonNull(startDate, "startDate must not be null");
