@@ -7,11 +7,11 @@ public class YearMonthAdapter extends XmlAdapter<String, YearMonth> {
 
     @Override
     public YearMonth unmarshal(String value) {
-        return YearMonth.parse(value);
+        return YearMonthUtil.fromString(value);
     }
 
     @Override
     public String marshal(YearMonth value) {
-        return value != null ? value.toString() : null;
+        return YearMonthUtil.toString(value);
     }
 }
