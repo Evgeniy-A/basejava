@@ -1,0 +1,24 @@
+package ru.javawebinar.basejava.storage.serializer;
+
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.util.JsonParser;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+
+public class JsonStreamSerializer implements Serializer {
+
+    @Override
+    public void writeResume(Resume r, OutputStream oss) throws IOException {
+        try (Writer w = new OutputStreamWriter(oss, StandardCharsets.UTF_8)) {
+            JsonParser.write(r, w);
+        }
+    }
+
+    @Override
+    public Resume readResume(InputStream is) throws IOException {
+        try (Reader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            return JsonParser.read(r, Resume.class);
+        }
+    }
+}
