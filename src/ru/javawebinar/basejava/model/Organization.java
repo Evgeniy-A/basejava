@@ -20,6 +20,12 @@ public class Organization implements Serializable {
     public Organization() {
     }
 
+    public Organization(Link link, List<Position> positions) {
+        Objects.requireNonNull(positions, "positions must not be null");
+        this.link = link;
+        this.positions = positions;
+    }
+
     public Organization(String url, String name, Position... positions) {
         this(name, url, Arrays.asList(positions));
     }
@@ -27,6 +33,22 @@ public class Organization implements Serializable {
     public Organization(String url, String name, List<Position> positions) {
         Objects.requireNonNull(positions, "positions must not be null");
         this.link = new Link(url, name);
+        this.positions = positions;
+    }
+
+    public Link getLink() {
+        return link;
+    }
+
+    public void setLink(Link link) {
+        this.link = link;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
         this.positions = positions;
     }
 
@@ -40,10 +62,6 @@ public class Organization implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(link, positions);
-    }
-
-    public List<Position> getPositions() {
-        return positions;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class OrganizationSection extends AbstractSection {
         this.organizations = organizations;
     }
 
-    private List<Organization> getOrganizations() {
+    public List<Organization> getOrganizations() {
         return organizations;
     }
 
