@@ -8,6 +8,6 @@ public class YearMonthUtil {
     }
 
     public static YearMonth fromString(String value) {
-        return value != null ? YearMonth.parse(value) : null;
+        return (value != null && !value.isBlank()) ? YearMonth.parse(value) : null;
     }
 }
