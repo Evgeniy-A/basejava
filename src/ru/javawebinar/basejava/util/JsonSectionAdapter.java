@@ -9,7 +9,8 @@ public class JsonSectionAdapter<T> implements JsonSerializer<T>, JsonDeserialize
     private static final String INSTANCE = "INSTANCE";
 
     @Override
-    public T deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+    public T deserialize(JsonElement json, Type type,
+                         JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
         String className = prim.getAsString();
@@ -21,7 +22,6 @@ public class JsonSectionAdapter<T> implements JsonSerializer<T>, JsonDeserialize
             throw new JsonParseException(e.getMessage());
         }
     }
-
 
     @Override
     public JsonElement serialize(T section, Type type, JsonSerializationContext context) {

@@ -9,7 +9,7 @@ import java.io.Writer;
 import java.time.YearMonth;
 
 public class JsonParser {
-    private static Gson GSON = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(YearMonth.class, new GsonYearMonthAdapter())
             .registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter<>())
             .create();

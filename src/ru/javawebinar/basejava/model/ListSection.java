@@ -2,7 +2,6 @@ package ru.javawebinar.basejava.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -21,6 +20,10 @@ public class ListSection extends AbstractSection {
 
     public void addContent(String content) {
         contentList.add(content);
+    }
+
+    public List<String> getContentList() {
+        return contentList;
     }
 
     @Override

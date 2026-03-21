@@ -7,7 +7,6 @@ public class MainFile {
     public static void main(String[] args) {
         File dir = new File("./src/ru");
         printDirectoryTree(dir, "");
-
     }
 
     public static void printDirectoryTree(File dir, String indent) {
