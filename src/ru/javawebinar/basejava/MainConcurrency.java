@@ -7,14 +7,9 @@ public class MainConcurrency {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println(Thread.currentThread().getName());
-        Thread thread0 = new Thread() {
-            @Override
-            public void run() {
-                System.out.println(getName() + ", " + getState());
-            }
-        };
+        Thread thread0 = new Thread(() -> System.out.println(
+                Thread.currentThread().getName() + ", " + Thread.currentThread().getState()));
         thread0.start();
-
         new Thread(() -> System.out.println(Thread.currentThread().getName() +
                                             ", " + Thread.currentThread().getState())).start();
         System.out.println(thread0.getState());
