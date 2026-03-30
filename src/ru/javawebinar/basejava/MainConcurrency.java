@@ -1,9 +1,23 @@
 package ru.javawebinar.basejava;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class MainConcurrency {
     private static int counter;
+    public static final int THREADS_NUMBER = 10000;
     private static final Object LOCK_0 = new Object();
     private static final Object LOCK_1 = new Object();
+    private static final ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+    private static final Lock WRITE_LOCK = reentrantReadWriteLock.writeLock();
+    private static final Lock READ_LOCK = reentrantReadWriteLock.readLock();
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+    private final AtomicInteger atomicCounter = new AtomicInteger();
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println(Thread.currentThread().getName());
@@ -14,42 +28,31 @@ public class MainConcurrency {
                                             ", " + Thread.currentThread().getState())).start();
         System.out.println(thread0.getState());
 
-        for (int i = 0; i < 2; i++) {
-            new Thread(() -> {
+        CountDownLatch latch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService =
+                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        final MainConcurrency mainConcurrency = new MainConcurrency();
+        for (int i = 0; i < THREADS_NUMBER; i++) {
+            Future<Integer> future = executorService.submit(() -> {
                 for (int j = 0; j < 100; j++) {
-                    if (j % 2 == 0) {
-                        inc();
-                    } else calculateSin();
+                    mainConcurrency.inc();
+                    String ts = LocalDateTime.now().format(DATE_TIME_FORMATTER);
+                    System.out.println(ts);
                 }
-            }).start();
+                latch.countDown();
+                return 5;
+            });
+            Thread.sleep(500);
+            System.out.println(counter);
         }
-        Thread.sleep(500);
-        System.out.println(counter);
+
+        latch.await(10, TimeUnit.SECONDS);
+        executorService.shutdown();
+        System.out.println(mainConcurrency.atomicCounter.get());
     }
 
-    private static void inc() {
-        synchronized (LOCK_0) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            synchronized (LOCK_1) {
-                counter++;
-            }
-        }
-    }
-
-    private static void calculateSin() {
-        synchronized (LOCK_1) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            synchronized (LOCK_0) {
-                double a = Math.sin(13.);
-            }
-        }
+    private void inc() {
+        atomicCounter.incrementAndGet();
     }
 }
