@@ -33,8 +33,8 @@ public class ResumeTestData {
 
     public static Resume creatResume(String uuid, String fullName) {
         Resume testResume = Resume.of(uuid, fullName);
-        creatResumeContacts(testResume);
-        creatResumeSections(testResume);
+//        creatResumeContacts(testResume);
+//        creatResumeSections(testResume);
         return testResume;
     }
 
