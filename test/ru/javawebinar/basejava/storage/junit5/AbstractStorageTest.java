@@ -12,6 +12,7 @@ import ru.javawebinar.basejava.storage.Storage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public abstract class AbstractStorageTest {
     protected static final String STORAGE_DIR = Config.get().getStorageDir();
     protected final Storage storage;
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
     private static final Resume RESUME_1 = ResumeTestData.creatResume(UUID_1, "Джек Торранс");
     private static final Resume RESUME_2 = ResumeTestData.creatResume(UUID_2, "Джон Коффи");
     private static final Resume RESUME_3 = ResumeTestData.creatResume(UUID_3, "Кэрри Уайт");
