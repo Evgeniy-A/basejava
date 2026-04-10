@@ -8,9 +8,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
     public final SqlHelper sqlHelper;
+    private static final Logger LOG = Logger.getLogger(SqlStorage.class.getName());
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -18,11 +20,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
+        LOG.info("Clear");
         sqlHelper.runSQL("DELETE FROM resume");
     }
 
     @Override
     public void update(Resume r) {
+        LOG.info("Update " + r);
         sqlHelper.runSQL("UPDATE resume  SET full_name = ? WHERE uuid = ?", pst -> {
             pst.setString(1, r.getFullName());
             pst.setString(2, r.getUuid());
@@ -35,6 +39,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume r) {
+        LOG.info("Save " + r);
         sqlHelper.runSQL("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", pst -> {
             pst.setString(1, r.getUuid());
             pst.setString(2, r.getFullName());
@@ -45,6 +50,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
+        LOG.info("Get " + uuid);
         return sqlHelper.runSQL("SELECT * FROM resume r WHERE r.uuid =?", pst -> {
             pst.setString(1, uuid);
             ResultSet rs = pst.executeQuery();
@@ -57,6 +63,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
+        LOG.info("Delete " + uuid);
         sqlHelper.runSQL("DELETE FROM resume WHERE uuid = ?", pst -> {
             pst.setString(1, uuid);
             if (pst.executeUpdate() == 0) {
@@ -68,6 +75,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("GetAllSorted");
         return sqlHelper.runSQL("SELECT * FROM resume r ORDER BY full_name, uuid", pst -> {
             ResultSet rs = pst.executeQuery();
             List<Resume> allResumes = new ArrayList<>();
@@ -80,6 +88,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
+        LOG.info("Size");
         return sqlHelper.runSQL("SELECT count(*) FROM  resume", pst -> {
         ResultSet rs = pst.executeQuery();
         return rs.next() ? rs.getInt(1) : 0;
