@@ -21,13 +21,13 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         LOG.info("Clear");
-        sqlHelper.runSQL("DELETE FROM resume");
+        sqlHelper.executeSql("DELETE FROM resume");
     }
 
     @Override
     public void update(Resume r) {
         LOG.info("Update " + r);
-        sqlHelper.runSQL("UPDATE resume  SET full_name = ? WHERE uuid = ?", pst -> {
+        sqlHelper.executeSql("UPDATE resume  SET full_name = ? WHERE uuid = ?", pst -> {
             pst.setString(1, r.getFullName());
             pst.setString(2, r.getUuid());
             if (pst.executeUpdate() == 0) {
@@ -40,7 +40,7 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         LOG.info("Save " + r);
-        sqlHelper.runSQL("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", pst -> {
+        sqlHelper.executeSql("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", pst -> {
             pst.setString(1, r.getUuid());
             pst.setString(2, r.getFullName());
             pst.execute();
@@ -51,7 +51,7 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        return sqlHelper.runSQL("SELECT * FROM resume r WHERE r.uuid =?", pst -> {
+        return sqlHelper.executeSql("SELECT * FROM resume r WHERE r.uuid =?", pst -> {
             pst.setString(1, uuid);
             ResultSet rs = pst.executeQuery();
             if (!rs.next()) {
@@ -64,7 +64,7 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        sqlHelper.runSQL("DELETE FROM resume WHERE uuid = ?", pst -> {
+        sqlHelper.executeSql("DELETE FROM resume WHERE uuid = ?", pst -> {
             pst.setString(1, uuid);
             if (pst.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
@@ -76,10 +76,10 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return sqlHelper.runSQL("SELECT * FROM resume r ORDER BY full_name, uuid", pst -> {
+        return sqlHelper.executeSql("SELECT * FROM resume r ORDER BY full_name, uuid", pst -> {
             ResultSet rs = pst.executeQuery();
             List<Resume> allResumes = new ArrayList<>();
-            while (rs.next()){
+            while (rs.next()) {
                 allResumes.add(Resume.of(rs.getString("uuid"), rs.getString("full_name")));
             }
             return allResumes;
@@ -89,9 +89,9 @@ public class SqlStorage implements Storage {
     @Override
     public int size() {
         LOG.info("Size");
-        return sqlHelper.runSQL("SELECT count(*) FROM  resume", pst -> {
-        ResultSet rs = pst.executeQuery();
-        return rs.next() ? rs.getInt(1) : 0;
+        return sqlHelper.executeSql("SELECT COUNT(*) FROM  resume", pst -> {
+            ResultSet rs = pst.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
         });
     }
 }

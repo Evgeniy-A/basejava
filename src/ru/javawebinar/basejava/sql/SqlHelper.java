@@ -11,11 +11,11 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public void runSQL(String sql) {
-        runSQL(sql, PreparedStatement::execute);
+    public void executeSql(String sql) {
+        executeSql(sql, PreparedStatement::execute);
     }
 
-    public <T> T runSQL(String sql, SqlExecutor<T> executor) {
+    public <T> T executeSql(String sql, SqlExecutor<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
