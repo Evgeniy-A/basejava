@@ -1,13 +1,16 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
@@ -40,10 +43,21 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         LOG.info("Save " + r);
-        sqlHelper.executeSql("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", pst -> {
-            pst.setString(1, r.getUuid());
-            pst.setString(2, r.getFullName());
-            pst.execute();
+        sqlHelper.transactionExecuteSql(conn -> {
+            try (PreparedStatement pst = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
+                pst.setString(1, r.getUuid());
+                pst.setString(2, r.getFullName());
+                pst.execute();
+            }
+            try (PreparedStatement pst = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
+                for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+                    pst.setString(1, r.getUuid());
+                    pst.setString(2, e.getKey().name());
+                    pst.setString(3, e.getValue());
+                    pst.addBatch();
+                }
+                pst.executeBatch();
+            }
             return null;
         });
     }
@@ -51,14 +65,25 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        return sqlHelper.executeSql("SELECT * FROM resume r WHERE r.uuid =?", pst -> {
-            pst.setString(1, uuid);
-            ResultSet rs = pst.executeQuery();
-            if (!rs.next()) {
-                throw new NotExistStorageException(uuid);
-            }
-            return Resume.of(uuid, rs.getString("full_name"));
-        });
+        return sqlHelper.executeSql("" +
+                                    " SELECT * FROM resume r " +
+                                    " LEFT JOIN contact c " +
+                                    " ON r.uuid = c.resume_uuid " +
+                                    " WHERE r.uuid =?",
+                pst -> {
+                    pst.setString(1, uuid);
+                    ResultSet rs = pst.executeQuery();
+                    if (!rs.next()) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    Resume r = Resume.of(uuid, rs.getString("full_name"));
+                    do {
+                        String value = rs.getString("value");
+                        ContactType type = ContactType.valueOf(rs.getString("type"));
+                        r.setContacts(type, value);
+                    } while (rs.next());
+                    return r;
+                });
     }
 
     @Override
