@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
-    public final SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
     private static final Logger LOG = Logger.getLogger(SqlStorage.class.getName());
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
@@ -66,11 +66,12 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        return sqlHelper.executeSql("" +
-                                    " SELECT * FROM resume r " +
-                                    " LEFT JOIN contact c " +
-                                    " ON r.uuid = c.resume_uuid " +
-                                    " WHERE r.uuid =?",
+        return sqlHelper.executeSql("""
+                        SELECT * FROM resume r
+                        LEFT JOIN contact c
+                        ON r.uuid = c.resume_uuid
+                        WHERE r.uuid = ?
+                        """,
                 pst -> {
                     pst.setString(1, uuid);
                     ResultSet rs = pst.executeQuery();
@@ -100,18 +101,19 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return sqlHelper.executeSql("" +
-                                    " SELECT * FROM resume r " +
-                                    " LEFT JOIN contact c " +
-                                    " ON r.uuid = c.resume_uuid " +
-                                    " ORDER BY r.full_name, r.uuid",
+        return sqlHelper.executeSql("""
+                        SELECT * FROM resume r
+                        LEFT JOIN contact c
+                        ON r.uuid = c.resume_uuid
+                        ORDER BY r.full_name, r.uuid
+                        """,
                 pst -> {
                     ResultSet rs = pst.executeQuery();
                     Map<String, Resume> map = new LinkedHashMap<>();
                     while (rs.next()) {
                         String uuid = rs.getString("uuid");
                         String fullName = rs.getString("full_name");
-                        Resume r = map.computeIfAbsent(uuid, id -> Resume.of(uuid, fullName));
+                        Resume r = map.computeIfAbsent(uuid, id -> Resume.of(id, fullName));
                         addContact(rs, r);
                     }
                     return new ArrayList<>(map.values());
@@ -121,9 +123,10 @@ public class SqlStorage implements Storage {
     @Override
     public int size() {
         LOG.info("Size");
-        return sqlHelper.executeSql("SELECT COUNT(*) FROM  resume", pst -> {
+        return sqlHelper.executeSql("SELECT COUNT(*) FROM resume", pst -> {
             ResultSet rs = pst.executeQuery();
-            return rs.next() ? rs.getInt(1) : 0;
+            rs.next();
+            return rs.getInt(1);
         });
     }
 
@@ -138,10 +141,10 @@ public class SqlStorage implements Storage {
     private void insertContacts(Connection conn, Resume r) throws SQLException {
         try (PreparedStatement pst = conn.prepareStatement(
                 "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
-            for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+            for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
                 pst.setString(1, r.getUuid());
-                pst.setString(2, e.getKey().name());
-                pst.setString(3, e.getValue());
+                pst.setString(2, entry.getKey().name());
+                pst.setString(3, entry.getValue());
                 pst.addBatch();
             }
             pst.executeBatch();
