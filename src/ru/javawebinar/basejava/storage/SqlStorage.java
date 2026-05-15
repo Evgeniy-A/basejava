@@ -98,26 +98,57 @@ public class SqlStorage implements Storage {
         });
     }
 
-    @Override
+//    @Override
+//    public List<Resume> getAllSorted() {
+//        LOG.info("GetAllSorted");
+//        return sqlHelper.executeSql("""
+//                        SELECT * FROM resume r
+//                        LEFT JOIN contact c
+//                        ON r.uuid = c.resume_uuid
+//                        ORDER BY r.full_name, r.uuid
+//                        """,
+//                pst -> {
+//                    ResultSet rs = pst.executeQuery();
+//                    Map<String, Resume> map = new LinkedHashMap<>();
+//                    while (rs.next()) {
+//                        String uuid = rs.getString("uuid");
+//                        String fullName = rs.getString("full_name");
+//                        Resume r = map.computeIfAbsent(uuid, id -> Resume.of(id, fullName));
+//                        addContact(rs, r);
+//                    }
+//                    return new ArrayList<>(map.values());
+//                });
+//    }
+
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return sqlHelper.executeSql("""
-                        SELECT * FROM resume r
-                        LEFT JOIN contact c
-                        ON r.uuid = c.resume_uuid
-                        ORDER BY r.full_name, r.uuid
-                        """,
-                pst -> {
-                    ResultSet rs = pst.executeQuery();
-                    Map<String, Resume> map = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        String fullName = rs.getString("full_name");
-                        Resume r = map.computeIfAbsent(uuid, id -> Resume.of(id, fullName));
-                        addContact(rs, r);
-                    }
-                    return new ArrayList<>(map.values());
-                });
+        Map<String, Resume> map = new LinkedHashMap<>();
+        return sqlHelper.transactionExecuteSql(conn -> {
+            try (PreparedStatement pst = conn.prepareStatement(
+                    """
+                            SELECT * FROM resume r
+                            ORDER BY r.full_name, r.uuid
+                            """)) {
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    String fullName = rs.getString("full_name");
+                    map.put(uuid, Resume.of(uuid, fullName));
+                }
+            }
+            try (PreparedStatement pst = conn.prepareStatement(
+                    """
+                            SELECT * FROM contact c
+                            """)) {
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("resume_uuid");
+                    Resume r = map.get(uuid);
+                    addContact(rs, r);
+                }
+            }
+            return new ArrayList<>(map.values());
+        });
     }
 
     @Override
