@@ -18,7 +18,19 @@ public class JsonParser {
         return GSON.fromJson(reader, clazz);
     }
 
-    public static <T> void write(T objrct, Writer write) {
-        GSON.toJson(objrct, write);
+    public static <T> T read(String content, Class<T> clazz) {
+        return GSON.fromJson(content, clazz);
+    }
+
+    public static <T> void write(T object, Writer write) {
+        GSON.toJson(object, write);
+    }
+
+    public static <T> String write(T object) {
+       return GSON.toJson(object);
+    }
+
+    public static <T> String write(T object, Class<T> clazz) {
+        return GSON.toJson(object, clazz);
     }
 }

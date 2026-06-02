@@ -2,6 +2,8 @@ package ru.javawebinar.basejava.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +18,10 @@ public class ListSection extends AbstractSection {
     public ListSection(List<String> contentList) {
         Objects.requireNonNull(contentList, "contentList must not be null");
         this.contentList = contentList;
+    }
+
+    public ListSection(String...strings) {
+        this(Arrays.asList(strings));
     }
 
     public void addContent(String content) {
