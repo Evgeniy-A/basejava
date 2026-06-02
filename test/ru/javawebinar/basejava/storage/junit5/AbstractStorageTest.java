@@ -8,6 +8,7 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.TestData.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,18 +17,11 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javawebinar.basejava.TestData.*;
 
 public abstract class AbstractStorageTest {
     protected static final String STORAGE_DIR = Config.get().getStorageDir();
     protected final Storage storage;
-    private static final String UUID_1 = UUID.randomUUID().toString();
-    private static final String UUID_2 = UUID.randomUUID().toString();
-    private static final String UUID_3 = UUID.randomUUID().toString();
-    private static final String UUID_4 = UUID.randomUUID().toString();
-    private static final Resume RESUME_1 = ResumeTestData.creatResume(UUID_1, "Джек Торранс");
-    private static final Resume RESUME_2 = ResumeTestData.creatResume(UUID_2, "Джон Коффи");
-    private static final Resume RESUME_3 = ResumeTestData.creatResume(UUID_3, "Кэрри Уайт");
-    private static final Resume RESUME_4 = ResumeTestData.creatResume(UUID_4, "Генри Дэнверс");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
